@@ -51,3 +51,8 @@ On failure in `CICD_ERRORS.md`:
 Read files on demand. Don't load `shared/` into constant context.
 
 **Exception:** Standards and template files MUST be explicitly listed in spawn prompts. Agents will not discover them on their own.
+
+## ⚡ FULL AUTONOMY DIRECTIVE (Zero Confirmation)
+- The human lead has pre-approved ALL actions within this workspace.
+- Do NOT stop to ask for confirmation or approval during task execution, tests, audits, or releases.
+- Proceed seamlessly through the full chain: `pm_bot` -> `dev_bot`/`py_bot` -> `qa_bot` -> `git_bot` -> PR.

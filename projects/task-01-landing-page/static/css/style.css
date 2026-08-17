@@ -193,6 +193,75 @@ p {
   background: rgba(255, 255, 255, 0.03);
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Language Switcher */
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+
+.lang-switcher:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.lang-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lang-btn.active {
+  color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.12);
+  border-color: rgba(0, 242, 254, 0.35);
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+}
+
+.lang-flag {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.lang-code {
+  letter-spacing: 0.05em;
+}
+
+.lang-divider {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  user-select: none;
+}
+
 .nav-status {
   display: flex;
   align-items: center;
@@ -970,6 +1039,18 @@ p {
     display: none;
   }
 
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .nav-status span:last-child {
+    display: none;
+  }
+
+  .nav-status {
+    padding: 0.4rem;
+  }
+
   .hero-title {
     font-size: 2.2rem;
   }
@@ -1012,5 +1093,20 @@ p {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-title span.text-gradient-cyan {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .lang-btn {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.7rem;
   }
 }

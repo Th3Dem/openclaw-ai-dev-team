@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang_code }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="OpenClaw AI Dev Team - 1 Lead Engineer + 5 Autonomous AI Bots delivering studio-grade software with 10x velocity and zero bad commits.">
-    <title>OpenClaw AI Engineering Team | Autonomous Dev Studio</title>
+    <meta name="description" content="{{ meta_desc }}">
+    <title>{{ html_title }}</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -14,19 +14,35 @@
         <div class="container nav-content">
             <a href="#hero" class="nav-brand">
                 <span class="nav-logo-icon">⚡</span>
-                <span class="nav-title">OpenClaw <span class="text-gradient-cyan">AI Dev Studio</span></span>
+                <span class="nav-title">{{ nav.title_prefix }} <span class="text-gradient-cyan">{{ nav.title_suffix }}</span></span>
                 <span class="nav-badge">v{{ version }}</span>
             </a>
             <ul class="nav-links">
-                <li><a href="#hero" class="nav-link">Overview</a></li>
-                <li><a href="#workflow" class="nav-link">Autonomous Flow</a></li>
-                <li><a href="#roster" class="nav-link">Team Roster</a></li>
-                <li><a href="#capabilities" class="nav-link">Capabilities</a></li>
-                <li><a href="#trust" class="nav-link">AI vs Classic Matrix</a></li>
+                <li><a href="#hero" class="nav-link">{{ nav.overview }}</a></li>
+                <li><a href="#workflow" class="nav-link">{{ nav.workflow }}</a></li>
+                <li><a href="#roster" class="nav-link">{{ nav.roster }}</a></li>
+                <li><a href="#capabilities" class="nav-link">{{ nav.capabilities }}</a></li>
+                <li><a href="#trust" class="nav-link">{{ nav.trust }}</a></li>
             </ul>
-            <div class="nav-status">
-                <span class="pulse-dot"></span>
-                <span>5 AGENTS OPERATIONAL</span>
+
+            <div class="nav-actions">
+                <!-- Language Switcher Pill -->
+                <div class="lang-switcher" id="langSwitcher" role="navigation" aria-label="Language Selector">
+                    <a href="/?lang=en" class="lang-btn {% if lang == 'en' %}active{% endif %}" data-lang="en" title="English" aria-label="Switch to English">
+                        <span class="lang-flag">🇬🇧</span>
+                        <span class="lang-code">EN</span>
+                    </a>
+                    <span class="lang-divider">/</span>
+                    <a href="/?lang=ru" class="lang-btn {% if lang == 'ru' %}active{% endif %}" data-lang="ru" title="Русский" aria-label="Переключить на русский">
+                        <span class="lang-flag">🇷🇺</span>
+                        <span class="lang-code">RU</span>
+                    </a>
+                </div>
+
+                <div class="nav-status">
+                    <span class="pulse-dot"></span>
+                    <span>{{ nav.status }}</span>
+                </div>
             </div>
         </div>
     </header>
@@ -35,68 +51,56 @@
     <section id="hero" class="section hero-section">
         <div class="container">
             <div class="hero-pill">
-                <span class="hero-pill-badge">NEXT-GEN PARADIGM</span>
-                <span>Autonomous Multi-Agent Software Engineering</span>
+                <span class="hero-pill-badge">{{ hero.pill_badge }}</span>
+                <span>{{ hero.pill_text }}</span>
             </div>
 
             <h1 class="hero-title">
-                Human Ingenuity. Autonomous Precision.<br>
-                <span class="text-gradient-cyan">Studio-Grade Output at 10x Velocity.</span>
+                {{ hero.title_line1 }}<br>
+                <span class="text-gradient-cyan">{{ hero.title_line2 }}</span>
             </h1>
 
             <p class="hero-description">
-                A proven engineering architecture: <strong>1 Lead Human Architect</strong> orchestrates 
-                <strong>5 specialized autonomous AI bots</strong>. Together, we deliver production-hardened 
-                Golang backends, FastAPI microservices, and automated DevOps with zero bad commits.
+                {{ hero.description | safe }}
             </p>
 
             <div class="hero-metrics-grid">
                 <div class="metric-card">
                     <div class="metric-icon">⚡</div>
-                    <div class="metric-value text-gradient-cyan">{{ metrics.velocity }}</div>
-                    <div class="metric-label">Delivery Velocity</div>
-                    <div class="metric-sub">Idea to production cycle time</div>
+                    <div class="metric-value text-gradient-cyan">{{ hero.metrics.velocity }}</div>
+                    <div class="metric-label">{{ hero.metrics.velocity_label }}</div>
+                    <div class="metric-sub">{{ hero.metrics.velocity_sub }}</div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-icon">🛡️</div>
-                    <div class="metric-value text-gradient-emerald">{{ metrics.qa_pass_rate }}</div>
-                    <div class="metric-label">QA Gatekeeper Pass</div>
-                    <div class="metric-sub">Strict ≥80% coverage mandate</div>
+                    <div class="metric-value text-gradient-emerald">{{ hero.metrics.qa_pass_rate }}</div>
+                    <div class="metric-label">{{ hero.metrics.qa_pass_label }}</div>
+                    <div class="metric-sub">{{ hero.metrics.qa_pass_sub }}</div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-icon">🌿</div>
-                    <div class="metric-value text-gradient-purple">{{ metrics.bad_commits }}</div>
-                    <div class="metric-label">Bad Commits on Main</div>
-                    <div class="metric-sub">Protected branch release isolation</div>
+                    <div class="metric-value text-gradient-purple">{{ hero.metrics.bad_commits }}</div>
+                    <div class="metric-label">{{ hero.metrics.bad_commits_label }}</div>
+                    <div class="metric-sub">{{ hero.metrics.bad_commits_sub }}</div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-icon">⏱️</div>
-                    <div class="metric-value text-gradient-cyan">{{ metrics.uptime_readiness }}</div>
-                    <div class="metric-label">Continuous Readiness</div>
-                    <div class="metric-sub">Zero downtime development loop</div>
+                    <div class="metric-value text-gradient-cyan">{{ hero.metrics.uptime_readiness }}</div>
+                    <div class="metric-label">{{ hero.metrics.uptime_label }}</div>
+                    <div class="metric-sub">{{ hero.metrics.uptime_sub }}</div>
                 </div>
             </div>
 
             <div class="telemetry-ribbon">
+                {% for item in hero.telemetry %}
                 <div class="telemetry-item">
-                    <span>SECURITY MODEL:</span>
-                    <span class="telemetry-val">Least Privilege Sandboxing</span>
+                    <span>{{ item.label }}</span>
+                    <span class="telemetry-val">{{ item.val }}</span>
                 </div>
-                <div class="telemetry-item">
-                    <span>AUDIT TRAIL:</span>
-                    <span class="telemetry-val">Immutable WORKLOG.md</span>
-                </div>
-                <div class="telemetry-item">
-                    <span>QUALITY GATES:</span>
-                    <span class="telemetry-val">flake8 + golangci-lint + SAST</span>
-                </div>
-                <div class="telemetry-item">
-                    <span>STATUS:</span>
-                    <span class="telemetry-val">Healthy (200 OK)</span>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -105,115 +109,42 @@
     <section id="workflow" class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">DETERMINISTIC PIPELINE</span>
-                <h2 class="section-title">The Autonomous Delivery Flow</h2>
-                <p class="section-subtitle">
-                    Every feature follows a strict, unidirectional quality pipeline. No agent operates outside its 
-                    allocated privileges, guaranteeing auditability, code correctness, and repository safety.
-                </p>
+                <span class="section-tag">{{ workflow.tag }}</span>
+                <h2 class="section-title">{{ workflow.title }}</h2>
+                <p class="section-subtitle">{{ workflow.subtitle }}</p>
             </div>
 
             <div class="workflow-pipeline">
                 <div class="workflow-steps-grid">
-                    <!-- Step 1: User / Strategy -->
+                    {% for step in workflow.steps %}
                     <div class="flow-step-card">
-                        <span class="flow-step-num">01</span>
-                        <div class="flow-bot-icon">💡</div>
-                        <h3 class="flow-step-title">Idea & Vision</h3>
-                        <div class="flow-bot-id">User & Human Lead</div>
-                        <p class="flow-step-desc">
-                            High-level concept, strategic architecture guidelines, and core business requirements are submitted.
-                        </p>
+                        <span class="flow-step-num">{{ step.num }}</span>
+                        <div class="flow-bot-icon">{{ step.icon }}</div>
+                        <h3 class="flow-step-title">{{ step.title }}</h3>
+                        <div class="flow-bot-id">{{ step.bot_id }}</div>
+                        <p class="flow-step-desc">{{ step.desc | safe }}</p>
                         <div class="flow-badge-list">
-                            <span class="flow-badge">Product Strategy</span>
-                            <span class="flow-badge">Domain Vision</span>
+                            {% for badge in step.badges %}
+                            <span class="flow-badge">{{ badge }}</span>
+                            {% endfor %}
                         </div>
                     </div>
-
-                    <!-- Step 2: PM Orchestrator -->
-                    <div class="flow-step-card">
-                        <span class="flow-step-num">02</span>
-                        <div class="flow-bot-icon">📋</div>
-                        <h3 class="flow-step-title">Spec Architecture</h3>
-                        <div class="flow-bot-id">pm_bot (Paula)</div>
-                        <p class="flow-step-desc">
-                            Decomposes ideas into atomic <code>TASK-XX.md</code> files, maps dependency graphs, and initializes the WORKLOG.
-                        </p>
-                        <div class="flow-badge-list">
-                            <span class="flow-badge">TASK-XX.md Specs</span>
-                            <span class="flow-badge">Acceptance Criteria</span>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Polyglot Dev Bots -->
-                    <div class="flow-step-card">
-                        <span class="flow-step-num">03</span>
-                        <div class="flow-bot-icon">⚡ / 🐍</div>
-                        <h3 class="flow-step-title">Code & Unit Tests</h3>
-                        <div class="flow-bot-id">dev_bot & py_bot</div>
-                        <p class="flow-step-desc">
-                            Parallel implementation in Golang or Python with unit test suites, type annotations, and local verification.
-                        </p>
-                        <div class="flow-badge-list">
-                            <span class="flow-badge">Go 1.22+ / FastAPI</span>
-                            <span class="flow-badge">Pytest / go test</span>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: QA Gatekeeper -->
-                    <div class="flow-step-card">
-                        <span class="flow-step-num">04</span>
-                        <div class="flow-bot-icon">🔍</div>
-                        <h3 class="flow-step-title">Security & Audit</h3>
-                        <div class="flow-bot-id">qa_bot (QA)</div>
-                        <p class="flow-step-desc">
-                            Enforces strict ≥80% test coverage gate, runs linters, SAST vulnerability scans, and issues formal <code>QA_REPORT.md</code>.
-                        </p>
-                        <div class="flow-badge-list">
-                            <span class="flow-badge">Coverage ≥80%</span>
-                            <span class="flow-badge">SAST Security Scan</span>
-                        </div>
-                    </div>
-
-                    <!-- Step 5: Git Release Manager -->
-                    <div class="flow-step-card">
-                        <span class="flow-step-num">05</span>
-                        <div class="flow-bot-icon">🌿</div>
-                        <h3 class="flow-step-title">Release & PR</h3>
-                        <div class="flow-bot-id">git_bot (Git)</div>
-                        <p class="flow-step-desc">
-                            The sole bot with Git write permissions. Creates feature branches, crafts atomic commits, and raises production PRs.
-                        </p>
-                        <div class="flow-badge-list">
-                            <span class="flow-badge">Protected Branches</span>
-                            <span class="flow-badge">Zero Main Pollution</span>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
 
                 <!-- Least Privilege Security Model Callout -->
                 <div class="security-callout">
                     <div class="security-icon-large">🔒</div>
                     <div class="security-text">
-                        <h3>Least Privilege Security Architecture</h3>
-                        <p>
-                            Traditional AI coding setups suffer from catastrophic hallucinated commits and permission leaks. 
-                            OpenClaw enforces hardware-isolated roles where developers cannot touch git remotes, QA cannot alter code, 
-                            and only the dedicated release guardian merges verified pull requests.
-                        </p>
+                        <h3>{{ workflow.security.title }}</h3>
+                        <p>{{ workflow.security.desc }}</p>
                         <div class="security-rules-grid">
+                            {% for rule in workflow.security.rules %}
                             <div class="security-rule-item">
-                                <strong>DEV ISOLATION</strong>
-                                Dev bots write code and unit tests only. No write access to git remote or prod environments.
+                                <strong>{{ rule.label }}</strong>
+                                {{ rule.text }}
                             </div>
-                            <div class="security-rule-item">
-                                <strong>INDEPENDENT AUDIT</strong>
-                                QA bot acts as an unbypassable gatekeeper before any code can be considered complete.
-                            </div>
-                            <div class="security-rule-item">
-                                <strong>IMMUTABLE AUDIT TRAIL</strong>
-                                Every single action, decision, test output, and handoff is logged append-only in <code>WORKLOG.md</code>.
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -225,11 +156,9 @@
     <section id="roster" class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">ENGINEERING SQUAD</span>
-                <h2 class="section-title">Autonomous Team Roster</h2>
-                <p class="section-subtitle">
-                    A specialized multi-agent collective where each bot excels in its dedicated engineering domain.
-                </p>
+                <span class="section-tag">{{ roster.tag }}</span>
+                <h2 class="section-title">{{ roster.title }}</h2>
+                <p class="section-subtitle">{{ roster.subtitle }}</p>
             </div>
 
             <div class="roster-grid">
@@ -238,19 +167,18 @@
                     <div class="agent-avatar">👤</div>
                     <div class="agent-meta">
                         <div class="agent-name-row">
-                            <h3 class="agent-name">Lead Architect & Product Owner</h3>
-                            <span class="agent-badge">Human Strategic Lead</span>
+                            <h3 class="agent-name">{{ roster.human_lead.name }}</h3>
+                            <span class="agent-badge">{{ roster.human_lead.badge }}</span>
                         </div>
-                        <div class="agent-role">Strategic Direction • Architecture Vision • Prompt Governance</div>
+                        <div class="agent-role">{{ roster.human_lead.role }}</div>
                         <p class="agent-description" style="margin-top: 0.75rem; margin-bottom: 0;">
-                            Provides macro engineering oversight, business requirements alignment, prompt refinement, 
-                            and final sign-off on studio deliverables.
+                            {{ roster.human_lead.desc }}
                         </p>
                     </div>
                 </div>
 
                 <!-- 5 AI Bot Profiles -->
-                {% for agent in team_roster %}
+                {% for agent in roster.agents %}
                 <div class="agent-card">
                     <div class="agent-header">
                         <div class="agent-avatar">{{ agent.icon }}</div>
@@ -265,7 +193,7 @@
 
                     <p class="agent-description">{{ agent.description }}</p>
 
-                    <div class="agent-skills-title">Core Competencies & Stack</div>
+                    <div class="agent-skills-title">{{ roster.skills_title }}</div>
                     <ul class="agent-skills-list">
                         {% for skill in agent.skills %}
                         <li class="agent-skill-item">{{ skill }}</li>
@@ -281,15 +209,13 @@
     <section id="capabilities" class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">TECHNICAL SCOPE</span>
-                <h2 class="section-title">Capabilities & Engineering Stack</h2>
-                <p class="section-subtitle">
-                    Full-stack systems engineering built for scalability, concurrency, high availability, and rapid deployment.
-                </p>
+                <span class="section-tag">{{ capabilities_section.tag }}</span>
+                <h2 class="section-title">{{ capabilities_section.title }}</h2>
+                <p class="section-subtitle">{{ capabilities_section.subtitle }}</p>
             </div>
 
             <div class="capabilities-grid">
-                {% for cap in capabilities %}
+                {% for cap in capabilities_section['items'] %}
                 <div class="capability-card">
                     <div class="capability-icon-box">{{ cap.icon }}</div>
                     <h3 class="capability-title">{{ cap.title }}</h3>
@@ -304,113 +230,38 @@
     <section id="trust" class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">BENCHMARK COMPARISON</span>
-                <h2 class="section-title">AI Team vs Traditional Development</h2>
-                <p class="section-subtitle">
-                    How the autonomous multi-agent studio outclasses classical in-house and outsourced development across critical benchmarks.
-                </p>
+                <span class="section-tag">{{ trust.tag }}</span>
+                <h2 class="section-title">{{ trust.title }}</h2>
+                <p class="section-subtitle">{{ trust.subtitle }}</p>
             </div>
 
             <div class="matrix-wrapper">
                 <table class="matrix-table">
                     <thead>
                         <tr>
-                            <th style="width: 24%;">Evaluation Dimension</th>
-                            <th class="col-team" style="width: 38%;">OpenClaw AI Dev Studio</th>
-                            <th style="width: 26%;">Classic Dev (Agency / In-House)</th>
-                            <th style="width: 12%;">Advantage</th>
+                            <th style="width: 24%;">{{ trust.col_dim }}</th>
+                            <th class="col-team" style="width: 38%;">{{ trust.col_team }}</th>
+                            <th style="width: 26%;">{{ trust.col_classic }}</th>
+                            <th style="width: 12%;">{{ trust.col_adv }}</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for row in trust.rows %}
                         <tr>
                             <td class="matrix-dimension">
-                                <span>⚡</span> Delivery Velocity
+                                <span>{{ row.icon }}</span> {{ row.dimension }}
                             </td>
                             <td class="col-team">
-                                Rapid turnarounds: features shipped in hours with automated spec-to-release workflows.
+                                {{ row.team }}
                             </td>
                             <td class="col-classic">
-                                Weeks of sprint planning, meetings, context-switching, and backlog delays.
+                                {{ row.classic }}
                             </td>
                             <td>
-                                <span class="matrix-advantage-badge">10x Faster</span>
+                                <span class="matrix-advantage-badge">{{ row.advantage }}</span>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td class="matrix-dimension">
-                                <span>🛡️</span> Test Coverage & Rigor
-                            </td>
-                            <td class="col-team">
-                                Strict automated gatekeeping: ≥80% test coverage enforced before any PR is generated.
-                            </td>
-                            <td class="col-classic">
-                                Tests often skipped due to sprint deadlines; typical coverage &lt;40% in legacy code.
-                            </td>
-                            <td>
-                                <span class="matrix-advantage-badge">≥80% Min</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="matrix-dimension">
-                                <span>🔒</span> Security & Least Privilege
-                            </td>
-                            <td class="col-team">
-                                Zero-trust sandboxed agent roles. Automated SAST scans, CVE dependency auditing on every task.
-                            </td>
-                            <td class="col-classic">
-                                Shared admin credentials, developer direct-push to main, manual infrequent audits.
-                            </td>
-                            <td>
-                                <span class="matrix-advantage-badge">Zero-Trust</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="matrix-dimension">
-                                <span>📝</span> Documentation & Traceability
-                            </td>
-                            <td class="col-team">
-                                Immutable <code>WORKLOG.md</code> and formal <code>DEV_HANDOVER.md</code> on 100% of tasks.
-                            </td>
-                            <td class="col-classic">
-                                Outdated wikis, tribal knowledge silos, undocumented decisions lost during turnover.
-                            </td>
-                            <td>
-                                <span class="matrix-advantage-badge">100% Logged</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="matrix-dimension">
-                                <span>💰</span> Cost & Resource Efficiency
-                            </td>
-                            <td class="col-team">
-                                Fractional inference & compute costs; zero idle billable hours or communication overhead.
-                            </td>
-                            <td class="col-classic">
-                                High agency retainers, recruiting fees, project overhead, and expensive onboarding.
-                            </td>
-                            <td>
-                                <span class="matrix-advantage-badge">90% Less</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="matrix-dimension">
-                                <span>🌿</span> Release Reliability
-                            </td>
-                            <td class="col-team">
-                                0 bad commits on main. Atomic commits, isolated branches (<code>feat/*</code>), and QA sign-off.
-                            </td>
-                            <td class="col-classic">
-                                Unreviewed merges, merge conflicts, broken staging environments, Friday deploy panics.
-                            </td>
-                            <td>
-                                <span class="matrix-advantage-badge">0 Defects</span>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -423,19 +274,20 @@
             <div class="footer-brand">
                 <div class="nav-brand">
                     <span class="nav-logo-icon">⚡</span>
-                    <span class="nav-title">OpenClaw <span class="text-gradient-cyan">AI Dev Studio</span></span>
+                    <span class="nav-title">{{ nav.title_prefix }} <span class="text-gradient-cyan">{{ nav.title_suffix }}</span></span>
                 </div>
-                <div class="footer-tagline">1 Lead Engineer + 5 Autonomous AI Bots • Studio-Grade Software Engineering</div>
+                <div class="footer-tagline">{{ footer.tagline }}</div>
             </div>
 
             <div class="footer-badges">
-                <span class="footer-badge">FastAPI v0.110+</span>
-                <span class="footer-badge">Go 1.22+ Ready</span>
-                <span class="footer-badge">Docker Sandboxed</span>
-                <span class="footer-badge">Strict QA Enforced</span>
+                {% for badge in footer.badges %}
+                <span class="footer-badge">{{ badge }}</span>
+                {% endfor %}
             </div>
         </div>
     </footer>
 
+    <!-- Interactive Script -->
+    <script src="/static/js/main.js"></script>
 </body>
 </html>

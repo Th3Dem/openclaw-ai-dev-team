@@ -42,3 +42,37 @@ Details: QA approved with 0 blockers. Assigning git_bot (Git) to create feature 
 Details: Created feature branch feat/task-01-landing-page from main. Staged projects/task-01-landing-page/ and shared/TEAM_STATUS.json. Committed atomic feature release with comprehensive commit message, pushed to origin via SSH, and prepared Pull Request for main.
 ---
 
+---
+2026-08-17 22:46 | pm_bot | TASK_UPDATE | projects/task-01-landing-page
+Details: Received new requirement: Add language toggle (RU/EN) and full Russian localization for all 5 sections. Assigned to py_bot (Alex).
+---
+2026-08-17 22:48 | py_bot | LOCALIZATION_AND_BACKEND | projects/task-01-landing-page
+Details: Implemented comprehensive English and Russian localization datasets (LOCALIZATION_DATA) in app.py. Updated get_landing_context(lang) and get_index_page(request, lang) to support query parameter ?lang=ru|en and cookie persistence (openclaw_lang). Added supported_languages telemetry to /health endpoint.
+---
+2026-08-17 22:50 | py_bot | UI_TEMPLATES_AND_INTERACTIVITY | projects/task-01-landing-page
+Details: Updated templates/index.html with full Jinja2 localization variables for all 5 core sections (Hero, Workflow & Least Privilege, Team Roster for 5 bots + Human Lead, Capabilities, Analytics & Trust Matrix) and navbar language switcher. Created static/js/main.js for client-side state persistence in localStorage, cookie syncing, and smooth navigation. Styled .lang-switcher in static/css/style.css with cyber-engineering dark theme accents and responsive mobile rules.
+---
+2026-08-17 22:52 | py_bot | TESTING_AND_HANDOVER | projects/task-01-landing-page
+Details: Authored comprehensive test suite in tests/test_app.py covering English/Russian contexts, query params, cookie persistence, invalid lang fallbacks, static CSS/JS delivery, healthcheck, and security handlers. Updated DEV_HANDOVER.md. Ready for QA audit.
+---
+---
+2026-08-17 22:53 | pm_bot | HANDOFF_TO_QA | projects/task-01-landing-page
+Details: Received DEV_HANDOVER.md from py_bot for Russian localization & language toggle. Spawning qa_bot for audit.
+---
+---
+2026-08-17 22:54 | qa_bot | QA_AUDIT_START | projects/task-01-landing-page
+Details: Started QA & security audit for Russian Localization & Language Switcher updates. Running automated verification suite (black, flake8, mypy, pytest-cov, bandit/SAST). Reviewing templates/index.html, app.py, static/js/main.js, static/css/style.css, and tests/test_app.py.
+---
+2026-08-17 22:57 | qa_bot | BUG_DETECTION_AND_RESOLUTION | projects/task-01-landing-page
+Details: Detected runtime Jinja2 TypeError ('builtin_function_or_method' object is not iterable) on capabilities_section.items in templates/index.html:218 due to dictionary method collision. Resolved by accessing capabilities_section['items']. Reformatted app.py with black. Reran verification suite.
+---
+2026-08-17 22:59 | qa_bot | QA_AUDIT_COMPLETE | projects/task-01-landing-page
+Details: QA & security audit completed with verdict APPROVED. 14/14 Pytest tests passing with 100% statement coverage. 0 flake8 errors, 0 mypy issues, 0 black formatting issues. Verified Russian and English content rendering across all 5 sections, language switcher persistence (query params + cookies + localStorage), safe 404 XSS escaping, non-root Docker security, and /health telemetry. Generated QA_REPORT.md (QA-02). Handoff ready for release.
+---
+---
+2026-08-17 22:59 | pm_bot | TASK_HANDOVER_TO_GIT | projects/task-01-landing-page
+Details: QA approved bilingual localization (RU/EN) with 100% test coverage. Assigning git_bot to commit and release.
+---
+2026-08-17 23:01 | git_bot | RELEASE_MANAGEMENT | projects/task-01-landing-page
+Details: Staged Russian localization updates (app.py, templates/index.html, static/css/style.css, static/js/main.js, tests/test_app.py, DEV_HANDOVER.md, QA_REPORT.md, WORKLOG.md, shared/TEAM_STATUS.json). Committed atomic release 'feat: Add Russian localization and language switcher to landing page (TASK-01)'. Pushed branch feat/task-01-landing-page to origin.
+---
