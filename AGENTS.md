@@ -45,6 +45,14 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
+## 👥 AI Development Team Roster
+- **Project Manager (pm_bot):** Paula — Task decomposition, delegation, sprint tracking (pm_bot/)
+- **Lead UI/UX Designer (ui_ux_bot):** Elena — Visual hierarchy, Mobile-First HTML5/CSS3, Tailwind, design tokens (ui_ux_bot/)
+- **Lead Golang Dev (dev_bot):** Go backend, microservices, concurrency & APIs (dev_bot/)
+- **Python Developer (py_bot):** Alex — FastAPI microservices, Docker/SSH automation, Telegram bots (py_bot/)
+- **QA Gatekeeper (qa_bot):** Code audit, security scanning, test coverage gatekeeper (qa_bot/)
+- **Git Operations (git_bot):** Atomic commits, branch management, release PRs (git_bot/)
+
 ## Red Lines
 
 - Don't exfiltrate private data. Ever.

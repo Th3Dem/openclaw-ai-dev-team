@@ -31,6 +31,13 @@ This workspace contains a specialized AI-assisted development team focused on Go
 - **When**: Acts after qa_bot approves a feature or fix
 - **Authority**: **Only git_bot may run `git commit` or `git push`**
 
+### 🎨 Lead UI/UX Designer & Frontend Architect (ui_ux_bot)
+- **Role**: Lead UI/UX Designer & Frontend Architect
+- **Model**: **openrouter/kwaipilot/kat-coder-pro-v2** ✅ **CONFIGURED**
+- **Specialization**: Wireframing, visual hierarchy, layout design, responsive Mobile-First HTML5/CSS3 templates, Tailwind CSS generation, color tokens, and SVG graphics
+- **Focus**: Crafting high-converting, modern glassmorphic tech interfaces and modular frontend architecture
+- **Handover Output**: Produces UI_HANDOVER.md containing clean HTML/CSS templates and design specs for dev bots
+
 ### 🐍 Python Developer (py_bot)
 - **Role**: Lead developer for the Amnezia Web Panel (Python/FastAPI)
 - **Model**: **openrouter/kwaipilot/kat-coder-pro-v2** ✅ **CONFIGURED**

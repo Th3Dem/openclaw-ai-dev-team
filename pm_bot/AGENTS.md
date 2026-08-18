@@ -25,6 +25,7 @@ When spawning qa_bot, always include the relevant standards file and instruct it
 ## Spawn Protocol
 | Task | Agent | Model |
 |------|-------|-------|
+| UI/UX design | ui_ux_bot | openrouter/kwaipilot/kat-coder-pro-v2 |
 | Go dev | dev_bot | `openrouter/kwaipilot/kat-coder-pro-v2` |
 | Python dev | py_bot | `openrouter/kwaipilot/kat-coder-pro-v2` |
 | QA review | qa_bot | `openrouter/kwaipilot/kat-coder-pro-v2` |
