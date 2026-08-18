@@ -36,6 +36,23 @@ Route by project tech stack. If model rejected, attempt anyway, log, escalate.
 ## Automatic Flow
 dev_bot completes → immediately spawn qa_bot for review. No human intervention.
 
+## ⛓️ Strict Multi-Agent Delegation Pipeline
+Every task involving user interface or full-stack delivery MUST follow this exact sequential delegation chain:
+
+1. **Frontend & Visual Design -> `ui_ux_bot` (Elena):**
+   - All HTML5 structure, CSS3/Tailwind styling, UI components, modal design, and responsive layouts MUST be assigned to `ui_ux_bot` first.
+   - Output Deliverable: HTML/CSS templates + `UI_HANDOVER.md`.
+2. **Backend Services & Template Integration:**
+   - **Python / FastAPI / Async Microservices -> `py_bot` (Alex):** Backend routes, database/storage, binding templates from `ui_ux_bot`, pytest suite (>=80% coverage).
+   - **High-Performance Go Services / Core APIs -> `dev_bot` (Dev):** Go backend services, concurrency, API endpoints, Go tests & benchmarks.
+   - Output Deliverable: `DEV_HANDOVER.md`.
+3. **Quality & Security Gatekeeper -> `qa_bot` (QA):**
+   - Audits, security scans (bandit, SAST), linting (black, flake8, mypy / golangci-lint), test coverage verification, WCAG accessibility check.
+   - Output Deliverable: `QA_REPORT.md` (APPROVED / REJECTED).
+4. **Version Control & GitHub Release -> `git_bot` (Git):**
+   - Branching (`feat/`), Conventional Commits, direct push to primary GitHub repository (`origin/dev`, `origin/main`), SemVer tagging, and PR delivery.
+   - Output Deliverable: Verified GitHub PR / commit link.
+
 ## 🏁 Definition of Done (DoD)
 A task is ONLY reported as "done-done" after:
 1. Specialist bot (`dev_bot` / `py_bot` / `ui_ux_bot`) completes implementation and handover.

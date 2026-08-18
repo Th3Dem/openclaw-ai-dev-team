@@ -1,7 +1,7 @@
 {
   "team_initialized": true,
   "initialized_at": "2026-03-20T21:55:00+03:00",
-  "last_updated": "2026-08-18T19:06:00+03:00",
+  "last_updated": "2026-08-18T19:29:00+03:00",
   "projects_completed": [
     "TASK-01",
     "TASK-01-I18N",
@@ -20,12 +20,19 @@
   ],
   "team_capacity": {
     "pm_bot": "active",
+    "ui_ux_bot": "free",
     "dev_bot": "free",
     "py_bot": "free",
     "qa_bot": "free",
-    "git_bot": "free",
-    "ui_ux_bot": "free"
+    "git_bot": "free"
   },
   "team_status": "active",
-  "next_action": "Ready for next task assignment"
+  "next_action": "Ready to orchestrate multi-agent workflow: ui_ux_bot -> dev_bot/py_bot -> qa_bot -> git_bot",
+  "delegation_policy": {
+    "frontend_ui_ux": "ui_ux_bot (Elena) -> UI_HANDOVER.md",
+    "backend_python": "py_bot (Alex) -> DEV_HANDOVER.md",
+    "backend_golang": "dev_bot (Dev) -> DEV_HANDOVER.md",
+    "quality_assurance": "qa_bot (QA) -> QA_REPORT.md",
+    "release_operations": "git_bot (Git) -> GitHub Direct Release & PR"
+  }
 }
