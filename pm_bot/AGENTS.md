@@ -36,6 +36,12 @@ Route by project tech stack. If model rejected, attempt anyway, log, escalate.
 ## Automatic Flow
 dev_bot completes → immediately spawn qa_bot for review. No human intervention.
 
+## 🏁 Definition of Done (DoD)
+A task is ONLY reported as "done-done" after:
+1. Specialist bot (`dev_bot` / `py_bot` / `ui_ux_bot`) completes implementation and handover.
+2. `qa_bot` signs off with `APPROVED` verdict in `QA_REPORT.md`.
+3. `git_bot` completes `git push origin <branch>`, opens/merges PR, and returns a verified GitHub PR / commit URL.
+
 ## Commit & Push
 **ONLY git_bot commits/pushes.** All others must spawn git_bot via subagent.
 

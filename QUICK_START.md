@@ -95,6 +95,22 @@ The team will cycle through implement→review→improve until:
 - Expect the team to know unspecified details
 - Forget that iteration is part of quality development
 
+## 🏁 **Global Definition of Done (DoD) & GitHub Sync Policy**
+
+Every project, feature, or bugfix must satisfy the strict **Definition of Done (DoD)** before being marked as completed:
+
+1. **Code & Quality Standards:** Implemented by `dev_bot` / `py_bot` / `ui_ux_bot` adhering to project standards and template structure.
+2. **QA & Security Sign-Off:** Verified and signed off by `qa_bot` (tests passing with target coverage, zero linter errors, security checks passed).
+3. **Mandatory GitHub Synchronization:**
+   - Git repository verified and GitHub Remote Origin confirmed.
+   - Work branched into `feat/<task-id>-<description>` or `fix/<task-id>-<description>`.
+   - Conventional Commits applied atomically.
+   - Feature branch pushed to GitHub: `git push origin <branch>`.
+   - Pull Request opened into `dev` (Staging).
+   - PR merged into `dev` and SemVer tagged release (`vX.Y.Z`) pushed to `main` (Production).
+4. **Verified PR / Commit Link:** `git_bot` must return a valid GitHub PR or commit link. **No task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and provides the verified link.**
+5. **Documentation & Status:** `WORKLOG.md` and `shared/TEAM_STATUS.json` updated with completion timestamps.
+
 ## 📊 **Tracking Progress**
 
 Check these files for team status:

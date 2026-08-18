@@ -53,6 +53,17 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - **QA Gatekeeper (qa_bot):** Code audit, security scanning, test coverage gatekeeper (qa_bot/)
 - **Git Operations (git_bot):** Atomic commits, branch management, release PRs (git_bot/)
 
+## 🏁 Global Definition of Done (DoD) & Mandatory GitHub Sync Policy
+
+1. **Mandatory GitHub Synchronization:** Every new project or task MUST be synchronized with GitHub.
+2. **Feature Branching:** All work proceeds in dedicated branches (`feat/<task-id>-<description>` or `fix/<task-id>-<description>`).
+3. **Conventional Commits:** All changes staged and committed atomically by `git_bot` following Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
+4. **Staging & Production Pipeline:**
+   - Feature branches push to GitHub: `git push origin <branch>`.
+   - PR opened into `dev` (Staging) upon `qa_bot` approval.
+   - PRs merged into `dev` and SemVer tagged releases (`vX.Y.Z`) pushed to `main` (Production).
+5. **Completion Gate:** **NO task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and returns a valid GitHub PR / commit link.**
+
 ## Red Lines
 
 - Don't exfiltrate private data. Ever.
