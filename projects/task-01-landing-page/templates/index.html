@@ -64,6 +64,15 @@
                 {{ hero.description | safe }}
             </p>
 
+            <!-- Prominent Green Hero CTA Button -->
+            <div class="hero-cta-wrap">
+                <button type="button" id="openLeadModalBtn" class="btn btn-primary-green btn-pulse" aria-haspopup="dialog" aria-controls="leadModal">
+                    <span class="btn-glow-ring"></span>
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">{{ hero.cta_button }}</span>
+                </button>
+            </div>
+
             <div class="hero-metrics-grid">
                 <div class="metric-card">
                     <div class="metric-icon">⚡</div>
@@ -286,6 +295,78 @@
             </div>
         </div>
     </footer>
+
+    <!-- Interactive Lead Intake Modal Dialog -->
+    <div id="leadModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-dialog">
+            <button type="button" class="modal-close" id="modalCloseBtn" aria-label="{{ modal.close_btn_aria }}">&times;</button>
+            
+            <div class="modal-header">
+                <div class="modal-badge">{{ modal.badge }}</div>
+                <h3 class="modal-title" id="modalTitle">{{ modal.title }}</h3>
+                <p class="modal-subtitle">{{ modal.subtitle }}</p>
+            </div>
+
+            <!-- Lead Intake Form View -->
+            <form id="leadForm" class="modal-form" novalidate>
+                <div class="form-alert" id="formAlert" role="alert" style="display: none;"></div>
+
+                <div class="form-group">
+                    <label for="leadName" class="form-label">
+                        <span>{{ modal.name_label }}</span>
+                        <span class="form-badge-req">{{ modal.required_badge }}</span>
+                    </label>
+                    <input type="text" id="leadName" name="name" class="form-input" required placeholder="{{ modal.name_placeholder }}" autocomplete="name">
+                    <div class="form-error" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="leadContact" class="form-label">
+                        <span>{{ modal.contact_label }}</span>
+                        <span class="form-badge-req">{{ modal.required_badge }}</span>
+                    </label>
+                    <input type="text" id="leadContact" name="contact" class="form-input" required placeholder="{{ modal.contact_placeholder }}" autocomplete="email tel">
+                    <div class="form-error" id="contactError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="leadMessage" class="form-label">
+                        <span>{{ modal.message_label }}</span>
+                        <span class="form-badge-opt">{{ modal.optional_badge }}</span>
+                    </label>
+                    <textarea id="leadMessage" name="message" class="form-textarea" rows="3" placeholder="{{ modal.message_placeholder }}"></textarea>
+                    <div class="form-error" id="messageError"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="leadSubmitBtn" class="btn btn-primary-green btn-block" data-submitting-text="{{ modal.submitting_btn }}">
+                        <span class="spinner" id="btnSpinner" style="display: none;"></span>
+                        <span class="btn-submit-label" id="btnSubmitText">{{ modal.submit_btn }}</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Confirmation State View -->
+            <div id="leadSuccessContainer" class="modal-success" style="display: none;">
+                <div class="success-icon-wrap">
+                    <div class="success-checkmark-circle">
+                        <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="success-title">{{ modal.success_title }}</h3>
+                <p class="success-desc">{{ modal.success_msg }}</p>
+                <div class="success-actions">
+                    <button type="button" class="btn btn-secondary" id="successCloseBtn">
+                        {{ modal.success_close_btn }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Interactive Script -->
     <script src="/static/js/main.js"></script>

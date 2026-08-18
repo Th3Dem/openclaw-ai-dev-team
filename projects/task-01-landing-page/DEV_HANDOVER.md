@@ -1,105 +1,133 @@
-# Development Handover: TASK-01 Landing Page (Bilingual EN/RU Localization Update)
+# Development Handover: TASK-01 Landing Page (Interactive Lead Intake Modal & Green CTA Enhancement)
 
 ## Metadata
-- **Handover ID:** HANDOVER-02
+- **Handover ID:** HANDOVER-03
 - **From:** py_bot (Alex 🐍)
 - **To:** qa_bot (QA 🔍) / pm_bot (Paula 📋)
 - **Project:** AI Dev Team Landing Page (`projects/task-01-landing-page`)
 - **Date:** 2026-08-17
-- **Task Reference:** TASK-01 (Bilingual Toggle Enhancement)
+- **Task Reference:** TASK-01 (Interactive Lead Modal & CTA Button)
 - **Status:** READY_FOR_REVIEW
 
 ---
 
 ## Executive Summary
-Implemented full bilingual support (English `en` and Russian `ru`) for the OpenClaw AI Dev Studio landing page. Added a sleek navbar language switcher button (`[ 🇬🇧 EN / 🇷🇺 RU ]`), server-side query parameter handling (`?lang=ru` / `?lang=en`), persistent cookie state (`openclaw_lang`), client-side `localStorage` caching in `static/js/main.js`, and comprehensive Russian translations across all 5 sections. Verified with an expanded 14-test pytest suite achieving 100% statement coverage.
+Successfully implemented the priority feature: a prominent glowing emerald CTA button (`#openLeadModalBtn`, `.btn-primary-green`, `.btn-pulse`) centered in the Hero section, an interactive cyber glassmorphism modal dialog (`#leadModal`), asynchronous lead intake via FastAPI (`POST /api/leads`), robust Pydantic data validation (`LeadRequest`), dual-tier lead storage (in-memory `LEADS_STORE` + local persistent `leads.json`), and comprehensive bilingual (RU/EN) synchronization. Verified with an expanded 20-test pytest suite achieving **100% statement coverage**, passing flake8, mypy, and black checks.
 
 ---
 
 ## Implementation Details
 
-### What Was Built & Enhanced
-1. **FastAPI Backend (`app.py`):**
-   - Implemented `LOCALIZATION_DATA` dictionaries for `en` and `ru` containing complete metadata, navigation, hero, workflow, team roster (5 bots + Human Lead), capabilities (6 items), analytics matrix, and footer.
-   - Updated `get_landing_context(lang: str = "en")` to build structured contexts based on requested language with backward-compatible top-level keys.
-   - Enhanced `get_index_page(request: Request, lang: Optional[str] = None)` route handler to evaluate query param `?lang=`, fallback to `openclaw_lang` cookie, or default to `en`. Sets `openclaw_lang` cookie on response.
-   - Updated `/health` endpoint to expose `supported_languages: ["en", "ru"]`.
-2. **UI & Templates (`templates/index.html`):**
-   - Replaced static text with Jinja2 localization variables.
-   - Added cyber-styled language toggle in navbar (`.lang-switcher`) with direct links to `/?lang=en` and `/?lang=ru` and active state highlighting.
-   - Preserved all 5 core sections: Hero, Workflow (Deterministic Pipeline & Least Privilege Security), Team Roster (Paula, Dev, Alex, QA, Git + Human Lead), Capabilities (6 items), and AI vs Classic Dev Trust Matrix.
-3. **Interactive Script (`static/js/main.js`):**
-   - Handles client-side language switching, localStorage persistence (`openclaw_lang`), cookie synchronization, and smooth internal anchor scrolling.
-4. **Cyber-Engineering Dark CSS (`static/css/style.css`):**
-   - Styled `.lang-switcher`, `.lang-btn`, `.lang-flag`, `.lang-code`, `.lang-divider` matching glowing cyan/emerald theme.
-   - Added responsive adjustments for mobile devices (down to 480px).
-5. **Pytest Test Suite (`tests/test_app.py`):**
-   - Added 14 unit and integration tests covering:
-     - English and Russian context integrity and structure.
-     - Fallback for invalid language parameters.
-     - Root route default (English) and explicit parameters (`?lang=en`, `?lang=ru`).
-     - Cookie persistence verification (`openclaw_lang=ru`).
-     - Static CSS and JS delivery.
-     - Telemetry schema verification.
-     - Custom 404 error handler and reflected XSS sanitization.
+### 1. Backend Architecture (`app.py`):
+- **Pydantic Validation Model (`LeadRequest`):**
+  - `name: str` (min 2, max 100 chars, whitespace stripped, non-empty validation).
+  - `contact: str` (min 3, max 120 chars, whitespace stripped, validates Telegram/Email/Phone).
+  - `message: Optional[str]` (max 2000 chars, optional project scope or requirements).
+- **Lead Persistence (`save_lead`):**
+  - Generates atomic `lead_id` (`lead-<hex8>`) and UTC timestamp.
+  - Appends to in-memory `LEADS_STORE` and persists formatted JSON to `leads.json`.
+  - Resilient error handling ensuring application stability even if disk I/O encounters transient errors.
+- **FastAPI Route (`POST /api/leads`):**
+  - Accepts JSON payload validated against `LeadRequest`.
+  - Logs intake events using structured logger (`logger.info(...)`).
+  - Returns `JSONResponse(status_code=200, content={"status": "success", "message": "...", "lead_id": ...})`.
+- **Localization Datasets (`LOCALIZATION_DATA`):**
+  - Added `cta_button` to Hero section: `"Apply for AI Dev Team"` (EN) / `"ПОДАТЬ ЗАЯВКУ"` (RU).
+  - Added comprehensive `modal` dictionaries for both `en` and `ru` containing badges, titles, subtitles, input labels, placeholders, requirement badges, submit/loading states, and success messages.
+  - Injected `modal` data into template context via `get_landing_context()`.
 
-### Files Changed / Created
+### 2. UI & Templates (`templates/index.html`):
+- **Hero Section CTA:**
+  - Placed `<div class="hero-cta-wrap">` containing `<button id="openLeadModalBtn" class="btn btn-primary-green btn-pulse">` directly below the hero description.
+- **Interactive Modal Dialog (`#leadModal`):**
+  - Accessible dialog (`role="dialog"`, `aria-modal="true"`, `aria-labelledby="modalTitle"`).
+  - Cyber glassmorphism dialog box with glowing emerald border and backdrop blur (`#modalBackdrop`).
+  - Close button (`#modalCloseBtn`, `&times;`) in top right.
+  - Form container (`#leadForm`) with Name, Contact, Project Scope inputs, inline error labels (`#nameError`, `#contactError`), alert box (`#formAlert`), and submit button (`#leadSubmitBtn`).
+  - Success container (`#leadSuccessContainer`) with animated checkmark circle SVG, confirmation message, and close button (`#successCloseBtn`).
+
+### 3. Client-Side Interactivity (`static/js/main.js`):
+- **Modal Lifecycle (`initLeadModal`):**
+  - Opens on CTA button click with smooth fade-in and scale-in animation, locks background scrolling, and auto-focuses the Name input.
+  - Closes on (X) button click, backdrop click, Success Close button, or `Escape` key press.
+  - Resets form state and views upon subsequent reopening.
+- **Client-Side Validation & Asynchronous Submission:**
+  - Real-time client-side length and non-empty checks in active language.
+  - Submits asynchronously via `fetch('/api/leads', { method: 'POST', ... })`.
+  - Toggles loading spinner and disabling state during request.
+  - Seamlessly transitions to the animated success checkmark view on 200 OK.
+  - Gracefully displays server/network error alerts on failure.
+
+### 4. Cyber Styling (`static/css/style.css`):
+- Glowing emerald gradient button (`.btn-primary-green`) with high-contrast dark text and hover elevation.
+- Continuous glowing pulse ring animation (`.btn-pulse::after`).
+- Backdrop filter blur (`14px`) and deep glassmorphic modal box (`rgba(15, 23, 42, 0.95)`).
+- Input focus rings (`--accent-emerald`) and validation error highlights (`--accent-rose`).
+- Animated SVG checkmark stroke-dashoffset animation.
+- Mobile responsive rules for screens under 768px and 480px.
+
+---
+
+## Files Changed / Created
+
 | File | Type | Change Description |
 |------|------|--------------------|
-| `app.py` | Modified | Added `LOCALIZATION_DATA` (EN/RU), query param & cookie handling, `/health` update |
-| `templates/index.html` | Modified | Added language switcher pill and full Jinja2 localization variables |
-| `static/js/main.js` | Created | Client-side language state persistence, storage sync, and smooth scrolling |
-| `static/css/style.css` | Modified | Added `.lang-switcher` and `.nav-actions` cyber styling + mobile media queries |
-| `tests/test_app.py` | Modified | Expanded to 14 tests covering bilingual rendering, cookies, fallback, and assets |
-| `WORKLOG.md` | Modified | Appended milestones for localization implementation and test suite |
-| `DEV_HANDOVER.md` | Modified | Updated handover documentation |
+| `app.py` | Modified | Added `LeadRequest`, `save_lead`, `POST /api/leads`, and EN/RU modal localization |
+| `templates/index.html` | Modified | Added Hero CTA button and interactive lead intake modal dialog markup |
+| `static/js/main.js` | Modified | Added `initLeadModal` lifecycle, validation, async fetch, and state handlers |
+| `static/css/style.css` | Modified | Added CTA button styles, pulse animation, glassmorphism modal, and checkmark SVG styles |
+| `tests/test_app.py` | Modified | Expanded to 20 unit/integration tests covering modal rendering, API, validation, and storage |
+| `WORKLOG.md` | Modified | Appended milestones for lead intake modal development |
+| `DEV_HANDOVER.md` | Modified | Updated handover specification for QA audit |
 
 ---
 
-## Testing Summary
+## Testing & Quality Summary
 
-### Unit & Integration Tests (tests/test_app.py)
-- **Total Tests:** 14
-- **Passing:** 14
-- **Failing:** 0
+### Pytest Execution Results
+- **Total Tests:** 20
+- **Passed:** 20
+- **Failed:** 0
 - **Statement Coverage:** **100%** (Target: ≥80%)
 
-### Test Cases Covered:
-1. `test_localization_data_integrity` — Verifies supported languages in `LOCALIZATION_DATA`.
-2. `test_get_landing_context_default_en` — Verifies English context structure, metrics, 5 bots, 6 capabilities.
-3. `test_get_landing_context_russian` — Verifies Russian context structure, labels, 5 bots, 6 capabilities, trust matrix.
-4. `test_get_landing_context_invalid_lang_fallback` — Verifies invalid language codes fall back safely to `en`.
-5. `test_index_page_english_default` — Verifies default `/` serves English HTML and all 5 sections.
-6. `test_index_page_english_explicit` — Verifies `/?lang=en` serves English HTML.
-7. `test_index_page_russian` — Verifies `/?lang=ru` serves complete Russian HTML across all 5 sections.
-8. `test_index_page_cookie_persistence` — Verifies cookie `openclaw_lang=ru` renders Russian page.
-9. `test_index_page_invalid_param_fallback` — Verifies invalid `?lang=foo` safely renders English.
-10. `test_health_check_endpoint` — Verifies `/health` returns 200 OK with supported languages telemetry.
-11. `test_static_css_served` — Verifies `/static/css/style.css` returns 200 OK and stylesheet contents.
-12. `test_static_js_served` — Verifies `/static/js/main.js` returns 200 OK and script contents.
-13. `test_custom_404_handler` — Verifies styled 404 page for non-existent routes.
-14. `test_custom_404_handler_xss_protection` — Verifies XSS payloads in 404 URLs are properly escaped.
+### Test Coverage Breakdown:
+1. `test_localization_data_integrity` — Verifies EN/RU integrity, CTA button labels, and all modal keys.
+2. `test_get_landing_context_default_en` — Verifies English context structure, metrics, 5 bots, capabilities, and modal data.
+3. `test_get_landing_context_russian` — Verifies Russian context structure, labels, 5 bots, capabilities, trust matrix, and modal.
+4. `test_get_landing_context_invalid_lang_fallback` — Verifies unsupported language fallback to English.
+5. `test_index_page_english_default` — Verifies English landing page renders green CTA button and modal markup.
+6. `test_index_page_english_explicit` — Verifies `/?lang=en` explicitly renders English.
+7. `test_index_page_russian` — Verifies `/?lang=ru` renders Russian Hero CTA ("ПОДАТЬ ЗАЯВКУ") and Russian modal.
+8. `test_index_page_cookie_persistence` — Verifies `openclaw_lang=ru` cookie persistence.
+9. `test_index_page_invalid_param_fallback` — Verifies query param fallback.
+10. `test_health_check_endpoint` — Verifies `/health` telemetry and supported languages.
+11. `test_static_css_served` — Verifies CSS stylesheet delivery with button and modal classes.
+12. `test_static_js_served` — Verifies JavaScript delivery with `initLeadModal`.
+13. `test_custom_404_handler` — Verifies styled 404 page.
+14. `test_custom_404_handler_xss_protection` — Verifies reflected XSS sanitization.
+15. `test_lead_request_model_validation` — Verifies Pydantic model validation (whitespace trimming, length limits, optional message).
+16. `test_submit_lead_success_full_payload` — Verifies `POST /api/leads` happy path with all fields.
+17. `test_submit_lead_success_minimal_payload` — Verifies `POST /api/leads` without optional message.
+18. `test_submit_lead_validation_errors` — Verifies 422 errors for missing/empty/invalid names, contacts, and invalid JSON.
+19. `test_save_lead_disk_resilience` — Verifies `save_lead` disk write error resilience.
+20. `test_save_lead_corrupted_json_handling` — Verifies self-healing recovery from corrupted leads file.
 
----
-
-## Standards Compliance
-- **PEP 8 / Code Style:** Clean type annotations on public function signatures (`from __future__ import annotations`, `Optional[str]`, `Dict[str, Any]`).
-- **Formatting:** Formatted with `black` standards (max line length 100).
-- **Linter:** Clean imports and structure conforming to `flake8`.
-- **Type Checking:** Fully annotated without `Any` in public handler signatures conforming to `mypy`.
-- **Zero Raw Prints:** Structured logging (`logger.info`, `logger.warning`) used exclusively.
+### Static Code Analysis
+- **Code Formatter:** Formatted with `black` (100-character line length).
+- **Linter:** Clean compliance with `flake8` (0 errors).
+- **Type Checker:** Strict typing with `mypy` (0 issues).
+- **Security & Logging:** Clean structured logging without `print()`.
 
 ---
 
 ## Sign-Off (py_bot)
-- [x] Language switcher button added in navbar (`[ 🇬🇧 EN / 🇷🇺 RU ]`)
-- [x] Full Russian translation implemented for all 5 sections (Hero, Workflow, Team Roster, Capabilities, Trust Matrix)
-- [x] Query param (`?lang=ru`) and cookie (`openclaw_lang`) persistence implemented
-- [x] `static/js/main.js` created and integrated with localStorage persistence
-- [x] `static/css/style.css` updated with cyber-engineering dark design
-- [x] 14 pytest test cases passing with target coverage (≥80%)
-- [x] `WORKLOG.md` and `DEV_HANDOVER.md` updated
-- [x] Ready for QA verification by `qa_bot`
-
-**Developer:** py_bot (Alex 🐍)  
-**Date:** 2026-08-17  
+- [x] Prominent green CTA button ("ПОДАТЬ ЗАЯВКУ" / "Apply for AI Dev Team") in Hero center with pulse glow.
+- [x] Sleek cyber glassmorphism modal window with Name, Contact, Project Scope, Submit, and Close.
+- [x] Animated success checkmark state with confirmation message.
+- [x] Full JavaScript interactivity (Open/Close, Backdrop, Escape, Client Validation, Async Fetch).
+- [x] FastAPI endpoint `POST /api/leads` with `LeadRequest` Pydantic validation.
+- [x] Lead storage in `LEADS_STORE` and `leads.json` with structured logging.
+- [x] Full bilingual EN/RU support for all modal fields and CTA buttons.
+- [x] 20 pytest test cases passing with 100% statement coverage (≥80% gate achieved).
+- [x] Black, Flake8, and Mypy passed with 0 errors.
+- [x] DEV_HANDOVER.md updated and ready for QA audit.

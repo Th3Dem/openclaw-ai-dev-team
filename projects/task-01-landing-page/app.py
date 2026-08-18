@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+import datetime
 import html
+import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
+import uuid
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel, Field, field_validator
 
 # Configure structured logging
 logging.basicConfig(
@@ -18,10 +22,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger("openclaw.landing")
 
-# Directory paths
+# Directory paths & storage
 BASE_DIR: Path = Path(__file__).resolve().parent
 STATIC_DIR: Path = BASE_DIR / "static"
 TEMPLATES_DIR: Path = BASE_DIR / "templates"
+LEADS_FILE: Path = BASE_DIR / "leads.json"
+
+# In-memory leads storage
+LEADS_STORE: List[Dict[str, Any]] = []
 
 # Create FastAPI application
 app = FastAPI(
@@ -41,6 +49,91 @@ TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
 # Mount static files and initialize templates
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+
+
+class LeadRequest(BaseModel):
+    """Pydantic model validating incoming lead intake requests."""
+
+    name: str = Field(
+        ..., min_length=2, max_length=100, description="Lead submitter full name"
+    )
+    contact: str = Field(
+        ...,
+        min_length=3,
+        max_length=120,
+        description="Contact information (Telegram/Email/Phone)",
+    )
+    message: Optional[str] = Field(
+        default=None,
+        max_length=2000,
+        description="Optional project scope or requirements",
+    )
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        cleaned = v.strip()
+        if len(cleaned) < 2:
+            raise ValueError("Name must contain at least 2 non-whitespace characters")
+        return cleaned
+
+    @field_validator("contact")
+    @classmethod
+    def validate_contact(cls, v: str) -> str:
+        cleaned = v.strip()
+        if len(cleaned) < 3:
+            raise ValueError(
+                "Contact must contain at least 3 non-whitespace characters"
+            )
+        return cleaned
+
+    @field_validator("message")
+    @classmethod
+    def validate_message(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        cleaned = v.strip()
+        return cleaned if cleaned else None
+
+
+def save_lead(lead_data: LeadRequest, client_ip: str = "unknown") -> Dict[str, Any]:
+    """Persist a newly received lead to in-memory list and local JSON tracking file."""
+    lead_id = f"lead-{uuid.uuid4().hex[:8]}"
+    created_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    record: Dict[str, Any] = {
+        "lead_id": lead_id,
+        "created_at": created_at,
+        "name": lead_data.name,
+        "contact": lead_data.contact,
+        "message": lead_data.message,
+        "client_ip": client_ip,
+    }
+    LEADS_STORE.append(record)
+
+    try:
+        existing_leads: List[Dict[str, Any]] = []
+        if LEADS_FILE.exists():
+            try:
+                content = LEADS_FILE.read_text(encoding="utf-8")
+                if content.strip():
+                    parsed = json.loads(content)
+                    if isinstance(parsed, list):
+                        existing_leads = parsed
+            except Exception as read_err:
+                logger.warning(
+                    "Could not parse existing leads file %s: %s", LEADS_FILE, read_err
+                )
+                existing_leads = []
+
+        existing_leads.append(record)
+        LEADS_FILE.write_text(
+            json.dumps(existing_leads, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except Exception as write_err:
+        logger.error("Failed to write lead to %s: %s", LEADS_FILE, write_err)
+
+    return record
 
 
 # Localization datasets for English and Russian
@@ -76,6 +169,7 @@ LOCALIZATION_DATA: Dict[str, Dict[str, Any]] = {
                 "we deliver production-hardened Golang backends, FastAPI microservices, "
                 "and automated DevOps with zero bad commits."
             ),
+            "cta_button": "Apply for AI Dev Team",
             "metrics": {
                 "velocity": "10x",
                 "velocity_label": "Delivery Velocity",
@@ -465,6 +559,32 @@ LOCALIZATION_DATA: Dict[str, Dict[str, Any]] = {
                 "Strict QA Enforced",
             ],
         },
+        "modal": {
+            "badge": "FAST LEAD INTAKE",
+            "title": "Apply for AI Dev Team",
+            "subtitle": (
+                "Leave your contacts and we'll prepare an architectural proposal and estimate."
+            ),
+            "name_label": "Your Name",
+            "name_placeholder": "e.g. Alex Smith",
+            "contact_label": "Contact Details",
+            "contact_placeholder": "Telegram @username, email, or phone",
+            "message_label": "Project Scope & Requirements",
+            "message_placeholder": (
+                "Describe your project goals, preferred tech stack, or target timeline..."
+            ),
+            "submit_btn": "Send Application",
+            "submitting_btn": "Submitting...",
+            "close_btn_aria": "Close modal window",
+            "success_title": "Thank you! Application received.",
+            "success_msg": (
+                "Our Lead Architect & PM will review your task and reach out within 15 minutes."
+            ),
+            "success_close_btn": "Close",
+            "error_generic": "Failed to submit application. Please check your inputs and try again.",
+            "required_badge": "Required",
+            "optional_badge": "Optional",
+        },
     },
     "ru": {
         "lang_code": "ru",
@@ -497,6 +617,7 @@ LOCALIZATION_DATA: Dict[str, Dict[str, Any]] = {
                 "мы создаем надежные Golang-бэкенды, микросервисы на FastAPI и автоматизированный "
                 "DevOps без единого ошибочного коммита."
             ),
+            "cta_button": "ПОДАТЬ ЗАЯВКУ",
             "metrics": {
                 "velocity": "10x",
                 "velocity_label": "Скорость поставки",
@@ -887,6 +1008,32 @@ LOCALIZATION_DATA: Dict[str, Dict[str, Any]] = {
                 "Строгий контроль QA",
             ],
         },
+        "modal": {
+            "badge": "БЫСТРАЯ ЗАЯВКА",
+            "title": "Подать заявку на разработку",
+            "subtitle": (
+                "Оставьте контакты, и мы подготовим архитектурное решение и оценку задачи."
+            ),
+            "name_label": "Ваше имя",
+            "name_placeholder": "например, Алексей Смирнов",
+            "contact_label": "Контактные данные",
+            "contact_placeholder": "Telegram @username, email или телефон",
+            "message_label": "Описание задачи и требования",
+            "message_placeholder": (
+                "Расскажите о проекте, стеке технологий или желаемых сроках..."
+            ),
+            "submit_btn": "Отправить заявку",
+            "submitting_btn": "Отправка...",
+            "close_btn_aria": "Закрыть модальное окно",
+            "success_title": "Спасибо! Ваша заявка принята.",
+            "success_msg": (
+                "PM свяжется с вами в течение 15 минут с архитектурным решением и оценкой."
+            ),
+            "success_close_btn": "Закрыть",
+            "error_generic": "Ошибка при отправке заявки. Пожалуйста, проверьте данные и попробуйте снова.",
+            "required_badge": "Обязательно",
+            "optional_badge": "Опционально",
+        },
     },
 }
 
@@ -919,6 +1066,7 @@ def get_landing_context(lang: str = "en") -> Dict[str, Any]:
         "capabilities_section": data["capabilities_section"],
         "trust": data["trust"],
         "footer": data["footer"],
+        "modal": data["modal"],
     }
     return context
 
@@ -949,6 +1097,27 @@ async def get_index_page(request: Request, lang: Optional[str] = None) -> HTMLRe
         samesite="lax",
     )
     return response
+
+
+@app.post("/api/leads", response_class=JSONResponse)
+async def submit_lead_application(request: Request, lead: LeadRequest) -> JSONResponse:
+    """Intake customer lead application, validate payload, and store lead record."""
+    client_ip = request.client.host if request.client else "unknown"
+    logger.info(
+        "Lead submission received from %s: name='%s', contact='%s'",
+        client_ip,
+        lead.name,
+        lead.contact,
+    )
+    record = save_lead(lead, client_ip=client_ip)
+    return JSONResponse(
+        status_code=200,
+        content={
+            "status": "success",
+            "message": "Thank you! Your application has been received successfully.",
+            "lead_id": record["lead_id"],
+        },
+    )
 
 
 @app.get("/health", response_class=JSONResponse)

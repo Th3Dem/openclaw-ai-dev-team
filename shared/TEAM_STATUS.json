@@ -1,21 +1,21 @@
 {
   "team_initialized": true,
   "initialized_at": "2026-03-20T21:55:00+03:00",
-  "last_updated": "2026-08-17T23:01:00+03:00",
+  "last_updated": "2026-08-18T19:02:00+03:00",
   "projects_completed": [
     "TASK-01",
-    "TASK-01-I18N"
+    "TASK-01-I18N",
+    "TASK-01-MODAL"
   ],
   "active_projects": [],
   "recently_completed": [
     {
-      "task_id": "TASK-01-I18N",
-      "name": "Landing Page Russian Localization & Language Switcher",
+      "task_id": "TASK-01-MODAL",
+      "name": "Landing Page Lead Modal & CTA Button",
       "path": "projects/task-01-landing-page",
-      "completed_by": "git_bot",
-      "completed_at": "2026-08-17T23:01:00+03:00",
-      "branch": "feat/task-01-landing-page",
-      "qa_verdict": "APPROVED (100% coverage, 14/14 tests)"
+      "assigned_to": "git_bot",
+      "status": "completed",
+      "completed_at": "2026-08-18T19:02:00+03:00"
     }
   ],
   "team_capacity": {
@@ -25,6 +25,6 @@
     "qa_bot": "free",
     "git_bot": "free"
   },
-  "team_status": "idle",
-  "next_action": "Awaiting next task assignment from pm_bot / user"
+  "team_status": "active",
+  "next_action": "Ready for next task assignment"
 }
