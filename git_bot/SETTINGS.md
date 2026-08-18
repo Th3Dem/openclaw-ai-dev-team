@@ -1,37 +1,32 @@
-# git_bot Settings & GitHub Sync Policy
+# git_bot Settings & GitHub Direct Upstream Policy
 
 **Model:** `openrouter/kwaipilot/kat-coder-pro-v2`
-**Role:** GitHub Operations, Branch Automation, and Release Engineering
+**Role:** GitHub Operations, Branch Automation, and Direct Upstream Release Engineering
+**Projects Workspace Root:** `/root/projects`
 
-## Mandatory GitHub Sync Policy
-Every new project or task MUST be synchronized with GitHub.
+## Direct GitHub Release Policy (No Forks)
+1. **Dedicated Independent Repositories:** Every project located in `/root/projects/<project-name>` must be initialized as an independent Git repository (`git init`).
+2. **Direct Upstream Origin:** All projects must be pushed directly to the primary GitHub account (`gh repo create <repo-name> --public/private --source=. --remote=origin` or `git remote add origin`).
+3. **No Intermediary Forks:** Pushing to intermediary forks or creating PRs across forks is strictly FORBIDDEN.
+4. **Direct Upstream Workflow:**
+   - Local Repo: `/root/projects/<project-name>`
+   - Development & Feature Branching: `feat/<task-id>-<description>` / `fix/<task-id>-<description>`
+   - Direct Staging Push: `origin/dev`
+   - Direct Production Push & SemVer Tags: `origin/main` (`vX.Y.Z`)
 
-### 1. Repository & Origin Verification
-- Verify Git repository initialization.
-- Ensure GitHub Remote Origin is configured (`gh repo create` or `git remote add origin`).
-
-### 2. Branch Architecture
+## Branch Architecture & Standards
 | Branch Type | Name Pattern | Purpose |
 |-------------|--------------|---------|
-| Feature | `feat/<task-id>-<description>` | Work branch for new features |
-| Bugfix | `fix/<task-id>-<description>` | Work branch for bug resolutions |
-| Staging | `dev` | Aggregation & integration branch for PRs |
-| Production | `main` | Production releases with SemVer tags (`vX.Y.Z`) |
+| Feature | `feat/<task-id>-<description>` | Dedicated work branch for new features |
+| Bugfix | `fix/<task-id>-<description>` | Dedicated work branch for bug fixes |
+| Staging | `dev` | Integration & staging branch on primary remote |
+| Production | `main` | Production branch with SemVer release tags |
 
-### 3. Commit Convention
-Use Conventional Commits:
+## Conventional Commits
+All commits must follow Conventional Commits:
 - `feat:` New user-facing feature or enhancement
 - `fix:` Bug fix or defect resolution
-- `refactor:` Code refactoring without behavioral change
+- `refactor:` Code refactoring without behavior change
 - `test:` Adding or updating tests
 - `docs:` Documentation updates
 - `chore:` Tooling, config, or maintenance
-
-### 4. PR & Release Pipeline
-1. `git_bot` creates `feat/<task-id>-<description>` branch.
-2. Stages files from specialist bots (`dev_bot`, `py_bot`, `ui_ux_bot`).
-3. Makes atomic Conventional Commit.
-4. Pushes feature branch to GitHub.
-5. Opens Pull Request (PR) targeting `dev` (Staging) upon `qa_bot` approval.
-6. Merges PR into `dev` and coordinates SemVer tagged releases (`vX.Y.Z`) to `main` (Production).
-7. Returns valid GitHub PR / Commit URL to `pm_bot` to satisfy the Definition of Done (DoD).

@@ -6,13 +6,18 @@ Your AI-assisted Golang development team is now ready to work! Here's how to use
 
 ### 📁 **Team Structure Overview**
 ```
-openclaw-ai-dev-team/
-├── 👥 pm_bot/          # Project Manager - Orchestrator
-├── 👥 dev_bot/         # Lead Golang Developer - Coder
-├── 👥 qa_bot/          # Quality Gatekeeper - Reviewer & Security
-├── 📁 shared/          # Common standards, templates, workflows
-├── 📁 projects/        # Working directory for Golang projects
-└── 📄 Documentation    # AGENTS.md, README.md, etc.
+openclaw-ai-dev-team/      # AI Team Bot Configs & Orchestration
+├── 👥 pm_bot/             # Project Manager - Orchestrator
+├── 👥 ui_ux_bot/          # Lead UI/UX Designer & Frontend Architect
+├── 👥 dev_bot/            # Lead Golang Developer - Coder
+├── 👥 py_bot/             # Python / FastAPI Developer
+├── 👥 qa_bot/             # Quality Gatekeeper - Reviewer & Security
+├── 👥 git_bot/            # GitHub Operations & Release Manager
+└── 📁 shared/             # Common standards, templates, workflows
+
+/root/projects/            # Dedicated External Projects Workspace
+├── 📁 <project-1>/        # Standalone Git Repo -> Direct Primary GitHub
+└── 📁 <project-2>/        # Standalone Git Repo -> Direct Primary GitHub
 ```
 
 ## 🔧 **How the Team Works**
@@ -95,21 +100,22 @@ The team will cycle through implement→review→improve until:
 - Expect the team to know unspecified details
 - Forget that iteration is part of quality development
 
-## 🏁 **Global Definition of Done (DoD) & GitHub Sync Policy**
+## 🏁 **Global Definition of Done (DoD) & Direct GitHub Sync Policy**
 
 Every project, feature, or bugfix must satisfy the strict **Definition of Done (DoD)** before being marked as completed:
 
-1. **Code & Quality Standards:** Implemented by `dev_bot` / `py_bot` / `ui_ux_bot` adhering to project standards and template structure.
-2. **QA & Security Sign-Off:** Verified and signed off by `qa_bot` (tests passing with target coverage, zero linter errors, security checks passed).
-3. **Mandatory GitHub Synchronization:**
-   - Git repository verified and GitHub Remote Origin confirmed.
+1. **Workspace Location:** Projects reside in `/root/projects/<project-name>`.
+2. **Code & Quality Standards:** Implemented by `dev_bot` / `py_bot` / `ui_ux_bot` adhering to project standards and template structure.
+3. **QA & Security Sign-Off:** Verified and signed off by `qa_bot` (tests passing with target coverage, zero linter errors, security checks passed).
+4. **Direct GitHub Synchronization (No Forks):**
+   - Project initialized as a standalone Git repo in `/root/projects/<project-name>`.
+   - Connected directly to primary GitHub account (no forks).
    - Work branched into `feat/<task-id>-<description>` or `fix/<task-id>-<description>`.
    - Conventional Commits applied atomically.
-   - Feature branch pushed to GitHub: `git push origin <branch>`.
-   - Pull Request opened into `dev` (Staging).
-   - PR merged into `dev` and SemVer tagged release (`vX.Y.Z`) pushed to `main` (Production).
-4. **Verified PR / Commit Link:** `git_bot` must return a valid GitHub PR or commit link. **No task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and provides the verified link.**
-5. **Documentation & Status:** `WORKLOG.md` and `shared/TEAM_STATUS.json` updated with completion timestamps.
+   - Pushed directly to primary GitHub: `git push origin <branch>`.
+   - PR opened and merged into `dev` (Staging) -> SemVer tagged release (`vX.Y.Z`) on `main` (Production).
+5. **Verified PR / Commit Link:** `git_bot` must return a valid primary GitHub PR or commit link. **No task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and provides the verified link.**
+6. **Documentation & Status:** `WORKLOG.md` and `shared/TEAM_STATUS.json` updated with completion timestamps.
 
 ## 📊 **Tracking Progress**
 

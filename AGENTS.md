@@ -53,16 +53,17 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - **QA Gatekeeper (qa_bot):** Code audit, security scanning, test coverage gatekeeper (qa_bot/)
 - **Git Operations (git_bot):** Atomic commits, branch management, release PRs (git_bot/)
 
-## 🏁 Global Definition of Done (DoD) & Mandatory GitHub Sync Policy
+## 🏁 Global Definition of Done (DoD) & Direct GitHub Upstream Policy
 
-1. **Mandatory GitHub Synchronization:** Every new project or task MUST be synchronized with GitHub.
-2. **Feature Branching:** All work proceeds in dedicated branches (`feat/<task-id>-<description>` or `fix/<task-id>-<description>`).
-3. **Conventional Commits:** All changes staged and committed atomically by `git_bot` following Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
-4. **Staging & Production Pipeline:**
-   - Feature branches push to GitHub: `git push origin <branch>`.
-   - PR opened into `dev` (Staging) upon `qa_bot` approval.
+1. **Workspace Location:** All development projects live in `/root/projects/<project-name>`.
+2. **Standalone Git Repositories:** Each project is an independent repository initialized with `git init`.
+3. **Direct Primary Remote (No Forks):** All projects sync directly to the user's primary GitHub account (`origin`). Pushing to intermediary forks or creating cross-fork PRs is strictly forbidden.
+4. **Branching & Commit Convention:** Dedicated branches (`feat/<task-id>-<description>`, `fix/<task-id>-<description>`) with Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
+5. **Direct Upstream Pipeline:**
+   - Feature branches push directly: `git push origin <branch>`.
+   - PR opened into `dev` (Staging on primary remote).
    - PRs merged into `dev` and SemVer tagged releases (`vX.Y.Z`) pushed to `main` (Production).
-5. **Completion Gate:** **NO task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and returns a valid GitHub PR / commit link.**
+6. **Completion Gate:** **NO task is marked as "DONE" until `git_bot` completes `git push origin <branch>` and returns a valid primary GitHub PR / commit link.**
 
 ## Red Lines
 
